@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+
+  nginx:
+    container_name: catalog_nginx
+    image: nginx
+    volumes:
+      - ./api:/var/www/api
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d/
+    ports:
+      - 80:80
+
+  php:
+    container_name: catalog_php
+    build: ./docker/php
+    volumes:
+      - ./api:/var/www/api
+      - ./front:/var/www/front
+
+  postgres:
+    container_name: catalog_postgres
+    image: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: catalog
+      POSTGRES_PASSWORD: secret
+
+  redis:
+    container_name: catalog_redis
+    image: redis
+    volumes:
+      - redis:/data
+    ports:
+      - 6379:6379
+
+volumes:
+  postgres:
+  redis:

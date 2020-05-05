@@ -12,9 +12,10 @@ class ProductFetcher
     public function fetch(FetchDTO $fetchDTO): Collection
     {
         return Product::query()
-            ->when($fetchDTO->search, function (Builder $query) use ($fetchDTO) {
-                $query->where('title', 'like', "%$fetchDTO->search%");
-            })
+            ->when(
+                $fetchDTO->search,
+                fn(Builder $query) => $query->where('title', 'like', "%$fetchDTO->search%")
+            )
             ->get();
     }
 }
